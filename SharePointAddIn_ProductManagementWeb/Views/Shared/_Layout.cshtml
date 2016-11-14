@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My Products</title>
+    <link href='@ViewBag.SPHostUrl/_layouts/15/defaultcss.ashx' type='text/css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/fabric-core/4.0.0/fabric.min.css" />
+    <link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/fabric-js/1.0.0/fabric.components.min.css" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div id="chrome_ctrl_container"></div>
+    <div class="ms-Grid" style="margin: 10px;">
+        @RenderBody()
+        <div class="ms-Grid-row">
+            <hr />
+            <footer>
+                <p class="ms-font-m">Global Products Management- v0.1</p>
+            </footer>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/spcontext")
+    @Scripts.Render("~/bundles/fabric")
+    @RenderSection("scripts", required: false)
+    <script src='@ViewBag.SPHostUrl/_layouts/15/SP.UI.Controls.js'></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var options = {
+                appHelpPageUrl: '@Url.Action("About","Home")',
+                appIconUrl: "AppIcon_Blue.png",
+                appTitle: "Global Product Management",
+                settingsLinks: [
+                    {
+                        linkUrl: '@Url.Action("Contact","Home")',
+                        displayName: "Contact"
+                    },
+                ]
+            };
+
+            var nav = new SP.UI.Controls.Navigation("chrome_ctrl_container", options);
+            nav.setVisible(true);
+        });
+
+
+        var CommandBarElements = document.querySelectorAll(".ms-CommandBar");
+        for (var i = 0; i < CommandBarElements.length; i++) {
+            new fabric['CommandBar'](CommandBarElements[i]);
+        }
+    </script>
+</body>
+</html>

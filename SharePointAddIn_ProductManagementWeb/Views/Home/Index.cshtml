@@ -1,0 +1,98 @@
+﻿@model ProductManagement.Models.View.ProductsViewModel
+
+@{
+    ViewBag.Title = "Products Overview Page";
+}
+
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+        <div class="ms-CommandBar ">
+            <div class="ms-CommandBar-sideCommands">
+
+                <div class="ms-CommandButton">
+                    <button class="ms-CommandButton-button">
+                        <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Contact"></i></span><span class="ms-CommandButton-label">@ViewBag.UserName</span>
+                    </button>
+                </div>
+            </div>
+            <div class="ms-CommandBar-mainArea">
+                <div class="ms-SearchBox  ms-SearchBox--commandBar">
+                    <input class="ms-SearchBox-field" type="text" value="">
+                    <label class="ms-SearchBox-label">
+                        <i class="ms-SearchBox-icon ms-Icon ms-Icon--Search"></i>
+                        <span class="ms-SearchBox-text">Search</span>
+                    </label>
+
+                    <div class="ms-CommandButton ms-SearchBox-clear ms-CommandButton--noLabel  ">
+                        <button class="ms-CommandButton-button">
+                            <span class="ms-CommandButton-icon "><i class="ms-Icon ms-Icon--Cancel"></i></span><span class="ms-CommandButton-label"></span>
+                        </button>
+                    </div>
+
+                    <div class="ms-CommandButton ms-SearchBox-exit ms-CommandButton--noLabel  ">
+                        <button class="ms-CommandButton-button">
+                            <span class="ms-CommandButton-icon "><i class="ms-Icon ms-Icon--ChromeBack"></i></span><span class="ms-CommandButton-label"></span>
+                        </button>
+                    </div>
+
+                    <div class="ms-CommandButton ms-SearchBox-filter ms-CommandButton--noLabel  ">
+                        <button class="ms-CommandButton-button">
+                            <span class="ms-CommandButton-icon "><i class="ms-Icon ms-Icon--Filter"></i></span><span class="ms-CommandButton-label"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ms-CommandButton">
+                    <a class="ms-CommandButton-button" href="@Url.Action("Index", "Home")">
+                        <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Table"></i></span><span class="ms-CommandButton-label">Overview</span>
+                    </a>
+                </div>
+
+                <div class="ms-CommandButton">
+                    <a class="ms-CommandButton-button" href="@Url.Action("New", "Home")">
+                        <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Add"></i></span><span class="ms-CommandButton-label">New</span>
+                    </a>
+                </div>
+
+                <div class="ms-CommandButton">
+                    <a class="ms-CommandButton-button" href="@Url.Action("Edit", "Home")">
+                        <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Edit"></i></span><span class="ms-CommandButton-label">Edit</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+        <h2 class="ms-font-l ms-fontWeight-semibold">Products Overview</h2>
+        <ul class="ms-List ">
+            @foreach (var item in Model.Products)
+            {
+                <li class="ms-ListItem  is-selectable" tabindex="0">
+                    <span class="ms-ListItem-primaryText">@item.Title</span>
+                    <span class="ms-ListItem-secondaryText">@item.Priority</span>
+                    <span class="ms-ListItem-tertiaryText">@item.Country</span>
+                    <span class="ms-ListItem-metaText">@item.StockLevel</span>
+
+                    <div class="ms-ListItem-selectionTarget"></div>
+                    <div class="ms-ListItem-actions">                        
+                        <div class="ms-ListItem-action"><a href="@Url.Action("Edit", new { id = item.ID })"><i class="ms-Icon ms-Icon--Edit"></i></a></div>
+                        <div class="ms-ListItem-action"><a href="@Url.Action("Delete", new { id = item.ID })"><i class="ms-Icon ms-Icon--Delete"></i></a></div>
+                        <div class="ms-ListItem-action"><i class="ms-Icon ms-Icon--Pinned"></i></div>
+                    </div>
+                </li>
+            }            
+        </ul>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var ListItemElements = document.querySelectorAll(".ms-ListItem");
+        for (var i = 0; i < ListItemElements.length; i++) {
+            new fabric['ListItem'](ListItemElements[i]);
+        }
+    </script>
+}

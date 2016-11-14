@@ -1,0 +1,164 @@
+﻿@model ProductManagement.Models.View.ProductViewModel
+
+@{
+    ViewBag.Title = "New Product";
+}
+<h2 class="ms-font-l ms-fontWeight-semibold">@ViewBag.Title</h2>
+
+@using (Html.BeginForm("New", "Home", new { SPHostUrl = ViewBag.SPHostUrl }))
+{
+    <div class="ms-TextField is-required">
+        <label class="ms-Label">Title</label>
+        @Html.TextBoxFor(model => model.Title, new { @class = "ms-TextField-field" })
+        @Html.ValidationMessageFor(model => model.Title)
+    </div>
+
+    <div class="ms-TextField is-required">
+        <label class="ms-Label">Stock Level</label>
+        @Html.TextBoxFor(model => model.StockLevel, new { @class = "ms-TextField-field", @type = "number" })
+        @Html.ValidationMessageFor(model => model.StockLevel)
+    </div>
+
+    <div class="ms-DatePicker">
+        <div class="ms-TextField is-required">
+            <label class="ms-Label">Expire date</label>
+            <i class="ms-DatePicker-event ms-Icon ms-Icon--Event"></i>
+            @Html.TextBoxFor(model => model.ExpireDate, new { @class = "ms-TextField-field", @placeholder = "Select a date...", Value = "" })
+            @Html.ValidationMessageFor(model => model.ExpireDate)
+        </div>
+        <div class="ms-DatePicker-monthComponents">
+            <span class="ms-DatePicker-nextMonth js-nextMonth"><i class="ms-Icon ms-Icon--ChevronRight"></i></span>
+            <span class="ms-DatePicker-prevMonth js-prevMonth"><i class="ms-Icon ms-Icon--ChevronLeft"></i></span>
+            <div class="ms-DatePicker-headerToggleView js-showMonthPicker"></div>
+        </div>
+        <span class="ms-DatePicker-goToday js-goToday">Go to today</span>
+        <div class="ms-DatePicker-monthPicker">
+            <div class="ms-DatePicker-header">
+                <div class="ms-DatePicker-yearComponents">
+                    <span class="ms-DatePicker-nextYear js-nextYear"><i class="ms-Icon ms-Icon--ChevronRight"></i></span>
+                    <span class="ms-DatePicker-prevYear js-prevYear"><i class="ms-Icon ms-Icon--ChevronLeft"></i></span>
+                </div>
+                <div class="ms-DatePicker-currentYear js-showYearPicker"></div>
+            </div>
+            <div class="ms-DatePicker-optionGrid">
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="0">Jan</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="1">Feb</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="2">Mar</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="3">Apr</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="4">May</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="5">Jun</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="6">Jul</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="7">Aug</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="8">Sep</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="9">Oct</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="10">Nov</span>
+                <span class="ms-DatePicker-monthOption js-changeDate" data-month="11">Dec</span>
+            </div>
+        </div>
+        <div class="ms-DatePicker-yearPicker">
+            <div class="ms-DatePicker-decadeComponents">
+                <span class="ms-DatePicker-nextDecade js-nextDecade"><i class="ms-Icon ms-Icon--ChevronRight"></i></span>
+                <span class="ms-DatePicker-prevDecade js-prevDecade"><i class="ms-Icon ms-Icon--ChevronLeft"></i></span>
+            </div>
+        </div>
+    </div>
+
+        <div class="ms-ChoiceFieldGroup is-required" id="choicefieldgroup" role="radiogroup">
+            <div class="ms-ChoiceFieldGroup-title">
+                <label class="ms-Label  is-required">Priority</label>
+            </div>
+            <ul class="ms-ChoiceFieldGroup-list">
+                <li>
+                    @Html.ValidationMessageFor(model => model.Priority)
+                </li>
+                <li>
+                    <div class="ms-RadioButton">
+                        @Html.RadioButtonFor(model => model.Priority, "Low", new { @class = "ms-RadioButton-input is-checked" })
+                        <label role="radio"
+                               class="ms-RadioButton-field"
+                               tabindex="0"
+                               aria-checked="false"
+                               name="choicefieldgroup">
+                            <span class="ms-Label">Low</span>
+                        </label>
+                    </div>
+                </li>
+                <li>
+                    <div class="ms-RadioButton">
+                        @Html.RadioButtonFor(model => model.Priority, "Medium", new { @class = "ms-RadioButton-input" })
+                        <label role="radio"
+                               class="ms-RadioButton-field"
+                               tabindex="0"
+                               aria-checked="false"
+                               name="choicefieldgroup">
+                            <span class="ms-Label">Medium</span>
+                        </label>
+                    </div>
+                </li>
+                <li>
+                    <div class="ms-RadioButton">
+                        @Html.RadioButtonFor(model => model.Priority, "High", new { @class = "ms-RadioButton-input" })
+                        <label role="radio"
+                               class="ms-RadioButton-field"
+                               tabindex="0"
+                               aria-checked="false"
+                               name="choicefieldgroup">
+                            <span class="ms-Label">High</span>
+                        </label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="ms-Dropdown" tabindex="0">
+            <label class="ms-Label is-required">Country</label>
+            <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--caretDown"></i>
+            @Html.DropDownListFor(model => model.Country, Model.Countries, "Choose a country...", new { @class = "ms-Dropdown-select" })
+
+        </div>
+
+        <div class="ms-Toggle">
+            <span class="ms-Toggle-description">Retired</span>
+            @Html.CheckBoxFor(model => model.Retired, new { @class = "ms-Toggle-input" })
+            <label for="Retired" class="ms-Toggle-field" tabindex="0">
+                <span class="ms-Label ms-Label--off">Off</span>
+                <span class="ms-Label ms-Label--on">On</span>
+            </label>
+        </div>
+
+
+        <div class="SubmitButton">
+            <button class="ms-Button ms-Button--primary" type="submit"><span class="ms-Button-label">Create Product</span></button>
+            <a class="ms-Button" href="@Url.Action("Index", "Home")"><span class="ms-Button-label">Cancel</span></a>
+        </div>
+}
+
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/PickaDate.js"></script>
+    <script type="text/javascript">
+        var DatePickerElements = document.querySelectorAll(".ms-DatePicker");
+        for (var i = 0; i < DatePickerElements.length; i++) {
+            new fabric['DatePicker'](DatePickerElements[i]);
+        }
+
+        var DropdownHTMLElements = document.querySelectorAll('.ms-Dropdown');
+        for (var i = 0; i < DropdownHTMLElements.length; ++i) {
+            var Dropdown = new fabric['Dropdown'](DropdownHTMLElements[i]);
+        }
+
+        var TextFieldElements = document.querySelectorAll(".ms-TextField");
+        for (var i = 0; i < TextFieldElements.length; i++) {
+            new fabric['TextField'](TextFieldElements[i]);
+        }
+
+        var ToggleElements = document.querySelectorAll(".ms-Toggle");
+        for (var i = 0; i < ToggleElements.length; i++) {
+            new fabric['Toggle'](ToggleElements[i]);
+        }
+
+        var ChoiceFieldGroupElements = document.querySelectorAll(".ms-ChoiceFieldGroup");
+        for (var i = 0; i < ChoiceFieldGroupElements.length; i++) {
+            new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
+        }
+    </script>
+}
