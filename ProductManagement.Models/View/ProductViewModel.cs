@@ -20,7 +20,7 @@ namespace ProductManagement.Models.View
         [Required]
         public string Country { get; set; }
 
-        [Required]        
+        [Required]
         public string Priority { get; set; }
 
         [Required]
@@ -28,6 +28,8 @@ namespace ProductManagement.Models.View
 
         [Required]
         public bool Retired { get; set; }
+
+        public string Contact { get; set; }
 
         public IEnumerable<SelectListItem> Countries { get; set; }
     }

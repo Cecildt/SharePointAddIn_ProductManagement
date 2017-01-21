@@ -13,6 +13,36 @@
         @Html.ValidationMessageFor(model => model.Title)
     </div>
 
+    <div id="contactUser" class="ms-PeoplePicker">
+        <div class="ms-PeoplePicker-searchBox">
+            <div class="ms-TextField  ms-TextField--textFieldUnderlined ">
+                @Html.TextBoxFor(model => model.Contact, new { @class = "ms-TextField-field", @placeholder = "Select or enter an option" })
+            </div>
+        </div>
+        <div class="ms-PeoplePicker-results">
+            <div class="ms-PeoplePicker-resultGroup">
+                <div class="ms-PeoplePicker-resultGroupTitle">
+                    Contacts
+                </div>
+                <div class="ms-PeoplePicker-result " tabindex="1">
+                    <div class="ms-Persona ms-Persona--sm">
+                        <div class="ms-Persona-imageArea">
+                            <div class="ms-Persona-initials ms-Persona-initials--blue">RM</div>
+                        </div>
+                        <div class="ms-Persona-presence">
+                        </div>
+                        <div class="ms-Persona-details">
+                            <div class="ms-Persona-primaryText">Russel Miller</div>
+                            <div class="ms-Persona-secondaryText">Sales</div>
+                        </div>
+                    </div>
+                    <button class="ms-PeoplePicker-resultAction"><i class="ms-Icon ms-Icon--Clear"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="ms-TextField is-required">
         <label class="ms-Label">Stock Level</label>
         @Html.TextBoxFor(model => model.StockLevel, new { @class = "ms-TextField-field", @type = "number" })
@@ -63,59 +93,59 @@
         </div>
     </div>
 
-        <div class="ms-ChoiceFieldGroup is-required" id="choicefieldgroup" role="radiogroup">
-            <div class="ms-ChoiceFieldGroup-title">
-                <label class="ms-Label  is-required">Priority</label>
-            </div>
-            <ul class="ms-ChoiceFieldGroup-list">
-                <li>
-                    @Html.ValidationMessageFor(model => model.Priority)
-                </li>
-                <li>
-                    <div class="ms-RadioButton">
-                        @Html.RadioButtonFor(model => model.Priority, "Low", new { @class = "ms-RadioButton-input is-checked" })
-                        <label role="radio"
-                               class="ms-RadioButton-field"
-                               tabindex="0"
-                               aria-checked="false"
-                               name="choicefieldgroup">
-                            <span class="ms-Label">Low</span>
-                        </label>
-                    </div>
-                </li>
-                <li>
-                    <div class="ms-RadioButton">
-                        @Html.RadioButtonFor(model => model.Priority, "Medium", new { @class = "ms-RadioButton-input" })
-                        <label role="radio"
-                               class="ms-RadioButton-field"
-                               tabindex="0"
-                               aria-checked="false"
-                               name="choicefieldgroup">
-                            <span class="ms-Label">Medium</span>
-                        </label>
-                    </div>
-                </li>
-                <li>
-                    <div class="ms-RadioButton">
-                        @Html.RadioButtonFor(model => model.Priority, "High", new { @class = "ms-RadioButton-input" })
-                        <label role="radio"
-                               class="ms-RadioButton-field"
-                               tabindex="0"
-                               aria-checked="false"
-                               name="choicefieldgroup">
-                            <span class="ms-Label">High</span>
-                        </label>
-                    </div>
-                </li>
-            </ul>
+    <div class="ms-ChoiceFieldGroup is-required" id="choicefieldgroup" role="radiogroup">
+        <div class="ms-ChoiceFieldGroup-title">
+            <label class="ms-Label  is-required">Priority</label>
         </div>
+        <ul class="ms-ChoiceFieldGroup-list">
+            <li>
+                @Html.ValidationMessageFor(model => model.Priority)
+            </li>
+            <li>
+                <div class="ms-RadioButton">
+                    @Html.RadioButtonFor(model => model.Priority, "Low", new { @class = "ms-RadioButton-input is-checked" })
+                    <label role="radio"
+                           class="ms-RadioButton-field"
+                           tabindex="0"
+                           aria-checked="false"
+                           name="choicefieldgroup">
+                        <span class="ms-Label">Low</span>
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="ms-RadioButton">
+                    @Html.RadioButtonFor(model => model.Priority, "Medium", new { @class = "ms-RadioButton-input" })
+                    <label role="radio"
+                           class="ms-RadioButton-field"
+                           tabindex="0"
+                           aria-checked="false"
+                           name="choicefieldgroup">
+                        <span class="ms-Label">Medium</span>
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="ms-RadioButton">
+                    @Html.RadioButtonFor(model => model.Priority, "High", new { @class = "ms-RadioButton-input" })
+                    <label role="radio"
+                           class="ms-RadioButton-field"
+                           tabindex="0"
+                           aria-checked="false"
+                           name="choicefieldgroup">
+                        <span class="ms-Label">High</span>
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </div>
 
-        <div class="ms-Dropdown" tabindex="0">
-            <label class="ms-Label is-required">Country</label>
-            <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--caretDown"></i>
-            @Html.DropDownListFor(model => model.Country, Model.Countries, "Choose a country...", new { @class = "ms-Dropdown-select" })
+    <div class="ms-Dropdown" tabindex="0">
+        <label class="ms-Label is-required">Country</label>
+        <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--caretDown"></i>
+        @Html.DropDownListFor(model => model.Country, Model.Countries, "Choose a country...", new { @class = "ms-Dropdown-select" })
 
-        </div>
+    </div>
 
         <div class="ms-Toggle">
             <span class="ms-Toggle-description">Retired</span>
@@ -126,7 +156,6 @@
             </label>
         </div>
 
-
         <div class="SubmitButton">
             <button class="ms-Button ms-Button--primary" type="submit"><span class="ms-Button-label">Create Product</span></button>
             <a class="ms-Button" href="@Url.Action("Index", "Home")"><span class="ms-Button-label">Cancel</span></a>
@@ -135,6 +164,7 @@
 
 @section scripts {
     <script type="text/javascript" src="~/Scripts/PickaDate.js"></script>
+    <script type="text/javascript" src="~/Scripts/controls/productcontrols.peoplepicker.js"></script>
     <script type="text/javascript">
         var DatePickerElements = document.querySelectorAll(".ms-DatePicker");
         for (var i = 0; i < DatePickerElements.length; i++) {
@@ -160,5 +190,8 @@
         for (var i = 0; i < ChoiceFieldGroupElements.length; i++) {
             new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
         }
+
+        var contact = document.getElementById("contactUser");
+        ProductControls.PeoplePicker.init(contact);
     </script>
 }

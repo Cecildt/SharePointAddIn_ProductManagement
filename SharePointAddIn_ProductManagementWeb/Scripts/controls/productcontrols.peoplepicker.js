@@ -1,4 +1,4 @@
-ProductControls = ProductControls || {};
+var ProductControls = ProductControls || {};
 ProductControls.PeoplePicker = (function ($) {
     var picker;
     var appweburl = getQueryStringParameter('SPAppWebUrl');
@@ -52,7 +52,7 @@ ProductControls.PeoplePicker = (function ($) {
         });
     }
 
-    function getQueryStringParameter(parameter) {
+    function getQueryStringParameter(parameter, url) {
         if (!url) {
             url = window.location.href;
         }
@@ -74,6 +74,12 @@ ProductControls.PeoplePicker = (function ($) {
 
     function init(element) {
         picker = new fabric['PeoplePicker'](element);
+        picker._peoplePickerSearch.addEventListener("keyup", function (e) {
+            console.log("Key up at people picker");
+        });
+
+        var resultsElement = picker._peoplePickerMenu.getElementsByClassName("ms-PeoplePicker-resultGroup");
+        $(resultsElement).append("<label>test</label>");
     }
 
     return {
