@@ -35,11 +35,14 @@ ProductControls.PeoplePicker = (function ($) {
             'headers': {
                 'accept': 'application/json;odata=verbose',
                 'content-type': 'application/json;odata=verbose',
-                'X-RequestDigest': requestDigest
+                //'X-RequestDigest': requestDigest
             },
             'success': function (data) {
                 var d = data;
                 var results = JSON.parse(data.d.ClientPeoplePickerSearchUser);
+                var resultsElement = picker._peoplePickerMenu.getElementsByClassName("ms-PeoplePicker-resultGroup");
+                $(resultsElement).append("<label>success</label>");
+
                 if (results.length > 0) {
                     response($.map(results, function (item) {
                         return { label: item.DisplayText, value: item.DisplayText }
@@ -69,16 +72,29 @@ ProductControls.PeoplePicker = (function ($) {
 
 
     function clearResults() {
+        removeElementsByClass("ms-PeoplePicker-result");
+    }
 
+    function removeElementsByClass(className) {
+        var elements = picker._peoplePickerMenu.getElementsByClassName(className);
+        while (elements.length > 0) {
+            elements[0].parentNode.removeChild(elements[0]);
+        }
     }
 
     function init(element) {
         picker = new fabric['PeoplePicker'](element);
         picker._peoplePickerSearch.addEventListener("keyup", function (e) {
-            console.log("Key up at people picker");
+            console.log("Key up at people picker: " + e.currentTarget.value);
+            var searchTerm = e.currentTarget.value;
+
+            if(searchTerm.length > 3) {
+                searchUsers(e.currentTarget.value);
+            }
         });
 
         var resultsElement = picker._peoplePickerMenu.getElementsByClassName("ms-PeoplePicker-resultGroup");
+
         $(resultsElement).append("<label>test</label>");
     }
 

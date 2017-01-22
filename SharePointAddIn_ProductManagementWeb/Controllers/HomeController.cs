@@ -15,7 +15,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
     {
         private ProductFactory _productFactory = new ProductFactory();
         private CountryFactory _countryFactory = new CountryFactory();
-        
+
         [SharePointContextFilter]
         public ActionResult Index()
         {
@@ -50,10 +50,10 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             model.Countries = _countryFactory.GetCountries();
 
             if (!ModelState.IsValid)
-            {                
+            {
                 return View(model);
             }
-            
+
             if (_productFactory.AddProduct(model))
             {
                 return RedirectToAction("Index", new { SPHostUrl = SharePointContext.GetSPHostUrl(HttpContext.Request).AbsoluteUri });
@@ -61,7 +61,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             else
             {
                 return View(model);
-            }                        
+            }
         }
 
         [SharePointContextFilter]
@@ -94,7 +94,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             else
             {
                 return View(model);
-            }                       
+            }
         }
 
         [SharePointContextFilter]

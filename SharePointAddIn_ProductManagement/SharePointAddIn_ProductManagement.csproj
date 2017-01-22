@@ -46,6 +46,13 @@
     <Content Include="AppIcon.png">
       <OpcRelationship>manifest-icon</OpcRelationship>
     </Content>
+    <Content Include="EmptyElementForSPAppWeb\Elements.xml" />
+    <Content Include="Features\Feature1\Feature1.Template.xml">
+      <DependentUpon>Feature1.feature</DependentUpon>
+    </Content>
+    <Content Include="Package\Package.Template.xml">
+      <DependentUpon>Package.package</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <AppManifestFile Include="AppManifest.xml">
@@ -66,6 +73,15 @@
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="EmptyElementForSPAppWeb\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{38f108fc-dc84-4478-9ad6-225a5e10d0a7}</SharePointProjectItemId>
+    </None>
+    <None Include="Features\Feature1\Feature1.feature">
+      <FeatureId>{a0931261-966f-4f34-900c-194ea05a4db8}</FeatureId>
+    </None>
+    <None Include="Package\Package.package">
+      <PackageId>{f3b99119-6bac-47e6-9656-193ece591ac8}</PackageId>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
