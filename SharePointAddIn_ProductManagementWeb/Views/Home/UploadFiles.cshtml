@@ -1,7 +1,7 @@
-﻿@model ProductManagement.Models.View.ProductsViewModel
-
+﻿
 @{
-    ViewBag.Title = "Products Overview Page";
+    ViewBag.Title = "Upload Files";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="ms-Grid-row">
@@ -72,33 +72,63 @@
 </div>
 <div class="ms-Grid-row">
     <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
-        <h2 class="ms-font-l ms-fontWeight-semibold">Products Overview</h2>
-        <ul class="ms-List ">
-            @foreach (var item in Model.Products)
-            {
-                <li class="ms-ListItem  is-selectable" tabindex="0">
-                    <span class="ms-ListItem-primaryText">@item.Title</span>
-                    <span class="ms-ListItem-secondaryText">@item.Priority</span>
-                    <span class="ms-ListItem-tertiaryText">@item.Country</span>
-                    <span class="ms-ListItem-metaText">@item.StockLevel</span>
+        <h2>Upload Files</h2>
 
-                    <div class="ms-ListItem-selectionTarget"></div>
-                    <div class="ms-ListItem-actions">
-                        <div class="ms-ListItem-action"><a href="@Url.Action("Edit", new { id = item.ID })"><i class="ms-Icon ms-Icon--Edit"></i></a></div>
-                        <div class="ms-ListItem-action"><a href="@Url.Action("Delete", new { id = item.ID })"><i class="ms-Icon ms-Icon--Delete"></i></a></div>
-                        <div class="ms-ListItem-action"><i class="ms-Icon ms-Icon--Pinned"></i></div>
-                    </div>
-                </li>
-            }
-        </ul>
+        <fieldset id="zone">
+            <legend>Drop a file inside&hellip;</legend>
+            <p>Or click here to <em>Browse</em>..</p>
+
+            <p class="progress">
+                <span id="bar_zone"></span>
+            </p>
+        </fieldset>
+
     </div>
 </div>
 
 @section scripts {
+    <script src='~/Scripts/controls/filedrop-min.js'></script>
     <script type="text/javascript">
-        var ListItemElements = document.querySelectorAll(".ms-ListItem");
-        for (var i = 0; i < ListItemElements.length; i++) {
-            new fabric['ListItem'](ListItemElements[i]);
+        // Tell FileDrop we can deal with iframe uploads using this URL:
+        var options = { iframe: { url: '/Home/UploadFile' } };
+        // Attach FileDrop to an area ('zone' is an ID but you can also give a DOM node):
+        var zone = new FileDrop('zone', options);
+        zone.multiple(true);
+
+        // opt.input contains file input created by FileDrop:
+        zone.opt.input.file.onchange = function (e) {
+            // eventFiles() retrieve dropped File objects in
+            // a cross-browser fashion:
+            zone.eventFiles(e).each(function (file) {
+                console.log(file.name + ' (' + file.size + ') bytes')
+            })
         }
+
+        // Do something when a user chooses or drops a file:
+        zone.event('send', function (files) {
+            // Depending on browser support files (FileList) might contain multiple items.
+            files.each(function (file) {
+                // React on successful AJAX upload:
+                file.event('done', function (xhr) {
+                    // 'this' here points to fd.File instance that has triggered the event.
+                    console.log('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
+                });
+
+                file.event('progress', function (current, total) {
+                    var width = current / total * 100 + '%'
+                    fd.byID('bar_zone').style.width = width
+                })
+
+                // Send the file:
+                file.sendTo('/Home/UploadFile');
+            });
+        });
+
+        // React on successful iframe fallback upload (this is separate mechanism
+        // from proper AJAX upload hence another handler):
+        zone.event('iframeDone', function (xhr) {
+            console.log('Done uploading via <iframe>, response:\n\n' + xhr.responseText);
+        });
+
     </script>
 }

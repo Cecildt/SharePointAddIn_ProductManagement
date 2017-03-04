@@ -5,7 +5,12 @@ using SharePointAddIn_ProductManagementWeb.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -109,6 +114,105 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             }
 
             return RedirectToAction("Index", new { SPHostUrl = SharePointContext.GetSPHostUrl(HttpContext.Request).AbsoluteUri });
+        }
+
+        [SharePointContextFilter]
+        [HttpGet]
+        public ActionResult UploadFiles()
+        {
+            ViewBag.SPHostUrl = SharePointContext.GetSPHostUrl(HttpContext.Request).AbsoluteUri;
+            ViewBag.UserName = SharePointHelper.GetUserDisplayName(HttpContext);
+
+            return View("UploadFiles");
+        }
+
+        [HttpPost]
+        public async Task<ContentResult> UploadFile(string id)
+        {
+            // Callback name is passed if upload happens via iframe, not AJAX (FileAPI).
+            string callback = Request.Form["fd-callback"];
+            string name;
+            byte[] data;
+
+            // Upload data can be POST'ed as raw form data or uploaded via <iframe> and <form>
+            // using regular multipart/form-data enctype (which is handled by ASP.NET Request.Files).
+            HttpPostedFileBase fdFile = Request.Files["fd-file"];
+            if (fdFile != null)
+            {
+                // Regular multipart/form-data upload.
+                name = fdFile.FileName;
+                data = new byte[fdFile.ContentLength];
+                fdFile.InputStream.Read(data, 0, fdFile.ContentLength);
+            }
+            else
+            {
+                // Raw POST data.
+                name = HttpUtility.UrlDecode(Request.Headers["X-File-Name"]);
+                data = new byte[Request.InputStream.Length];
+                Request.InputStream.Read(data, 0, (int)Request.InputStream.Length); //up to 2GB
+            }
+
+            // get a stream
+            Stream stream = new MemoryStream(data);
+            // and optionally write the file to disk
+            var fileName = Path.GetFileName(name);
+            var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
+            using (var fileStream = System.IO.File.Create(path))
+            {
+                stream.CopyTo(fileStream);
+            }
+
+            // Output message for this demo upload. In your real app this would be something
+            // meaningful for the calling script (that uses FileDrop.js).
+            byte[] md5Hash;
+            using (MD5 md5 = MD5.Create())
+            {
+                md5Hash = md5.ComputeHash(data);
+            }
+            string output = string.Format("{0}; received {1} bytes, MD5 = {2}", name, data.Length, BytesArrayToHexString(md5Hash));
+
+            // In FileDrop sample this demonstrates the passing of custom ?query variables along
+            // with an AJAX/iframe upload.
+            string opt = Request["upload_option"];
+            if (!string.IsNullOrEmpty(opt))
+            {
+                output += "\nReceived upload_option with value " + opt;
+            }
+
+            if (!string.IsNullOrEmpty(callback))
+            {
+                // Callback function given - the caller loads response into a hidden <iframe> so
+                // it expects it to be a valid HTML calling this callback function.
+                //Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+                output = HttpUtility.JavaScriptStringEncode(output);
+
+                //Response.Write(
+                //    "<!DOCTYPE html><html><head></head><body><script type=\"text/javascript\">" +
+                //   "try{window.top." + callback + "(\"" + output + "\")}catch(e){}</script></body></html>");
+
+                string result = "<!DOCTYPE html><html><head></head><body><script type=\"text/javascript\">" +
+                   "try{window.top." + callback + "(\"" + output + "\")}catch(e){}</script></body></html>";
+
+                return Content(result, "text/html; charset=utf-8");
+            }
+            else
+            {
+                //Response.Headers["Content-Type"] = "text/plain; charset=utf-8";
+                //Response.Write(output);
+
+                return Content(output, "text/plain; charset=utf-8");
+            }
+        }
+
+        private string BytesArrayToHexString(byte[] hash)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+
+            return sb.ToString();
         }
     }
 }

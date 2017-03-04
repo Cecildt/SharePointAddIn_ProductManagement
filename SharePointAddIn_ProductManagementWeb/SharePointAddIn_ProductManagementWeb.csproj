@@ -199,11 +199,14 @@
     <Compile Include="TokenHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\filedrop.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Readme.md" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\controls\filedrop-min.js" />
+    <Content Include="Scripts\controls\filedrop.js" />
     <Content Include="Scripts\controls\productcontrols.peoplepicker.js" />
     <Content Include="Scripts\fabric.js" />
     <Content Include="Scripts\fabric.min.js" />
@@ -237,9 +240,10 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\Edit.cshtml" />
+    <Content Include="Views\Home\UploadFiles.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
