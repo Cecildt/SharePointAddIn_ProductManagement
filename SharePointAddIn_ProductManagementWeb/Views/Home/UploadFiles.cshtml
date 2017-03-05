@@ -90,7 +90,7 @@
     <script src='~/Scripts/controls/filedrop-min.js'></script>
     <script type="text/javascript">
         // Tell FileDrop we can deal with iframe uploads using this URL:
-        var options = { iframe: { url: '/Home/UploadFile' } };
+        var options = { iframe: { url: '/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl' } };
         // Attach FileDrop to an area ('zone' is an ID but you can also give a DOM node):
         var zone = new FileDrop('zone', options);
         zone.multiple(true);
@@ -114,13 +114,22 @@
                     console.log('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
                 });
 
+                file.event('error', function (e, xhr) {
+                    console.log("Failed upload: " + xhr.status + ', ' + xhr.statusText)
+                })
+
+                // Reset the progress when a new upload starts:
+                file.event('sendXHR', function () {
+                    fd.byID('bar_zone').style.width = 0
+                })
+
                 file.event('progress', function (current, total) {
                     var width = current / total * 100 + '%'
                     fd.byID('bar_zone').style.width = width
                 })
 
                 // Send the file:
-                file.sendTo('/Home/UploadFile');
+                file.sendTo('/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl');
             });
         });
 

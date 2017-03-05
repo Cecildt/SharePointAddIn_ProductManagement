@@ -35,6 +35,10 @@
 
 /***
   With .over you can provide feedback when user drags a file over the drop zone:
- ***
+ ****/
   .fd-zone.over { border-color: maroon; background: #eee; }
-*/
+
+  .progress span{
+      height: 1em;
+      color: #000;
+  }

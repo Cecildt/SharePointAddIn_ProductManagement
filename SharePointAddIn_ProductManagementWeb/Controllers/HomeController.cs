@@ -126,8 +126,9 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             return View("UploadFiles");
         }
 
+        [SharePointContextFilter]
         [HttpPost]
-        public async Task<ContentResult> UploadFile(string id)
+        public async Task<ContentResult> UploadFileContent()
         {
             // Callback name is passed if upload happens via iframe, not AJAX (FileAPI).
             string callback = Request.Form["fd-callback"];
@@ -153,7 +154,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             }
 
             // get a stream
-            Stream stream = new MemoryStream(data);
+            MemoryStream stream = new MemoryStream(data);
             // and optionally write the file to disk
             var fileName = Path.GetFileName(name);
             var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
@@ -161,6 +162,8 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             {
                 stream.CopyTo(fileStream);
             }
+
+            Microsoft.SharePoint.Client.File uploadedFile = SharePointHelper.UploadFileStream(HttpContext, "Documents", name, stream);
 
             // Output message for this demo upload. In your real app this would be something
             // meaningful for the calling script (that uses FileDrop.js).
