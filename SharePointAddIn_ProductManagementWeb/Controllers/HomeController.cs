@@ -172,7 +172,8 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             {
                 md5Hash = md5.ComputeHash(data);
             }
-            string output = string.Format("{0}; received {1} bytes, MD5 = {2}", name, data.Length, BytesArrayToHexString(md5Hash));
+
+            var output = string.Format("{0}; received {1} bytes, MD5 = {2}", name, data.Length, BytesArrayToHexString(md5Hash));
 
             // In FileDrop sample this demonstrates the passing of custom ?query variables along
             // with an AJAX/iframe upload.
