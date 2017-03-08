@@ -156,12 +156,12 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             // get a stream
             MemoryStream stream = new MemoryStream(data);
             // and optionally write the file to disk
-            var fileName = Path.GetFileName(name);
-            var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
-            using (var fileStream = System.IO.File.Create(path))
-            {
-                stream.CopyTo(fileStream);
-            }
+            //var fileName = Path.GetFileName(name);
+            //var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
+            //using (var fileStream = System.IO.File.Create(path))
+            //{
+            //    stream.CopyTo(fileStream);
+            //}
 
             Microsoft.SharePoint.Client.File uploadedFile = SharePointHelper.UploadFileStream(HttpContext, "Documents", name, stream);
 
