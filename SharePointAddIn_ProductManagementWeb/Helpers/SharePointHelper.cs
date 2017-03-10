@@ -14,9 +14,9 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
         {
             User spUser = null;
 
-            SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
+            var spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
 
-            using (ClientContext clientContext = spContext.CreateUserClientContextForSPHost())
+            using (var clientContext = spContext.CreateUserClientContextForSPHost())
             {
                 if (clientContext != null)
                 {
@@ -37,9 +37,9 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
         {
             User spUser = null;
 
-            SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
+            var spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
 
-            using (ClientContext clientContext = spContext.CreateUserClientContextForSPHost())
+            using (var clientContext = spContext.CreateUserClientContextForSPHost())
             {
                 if (clientContext != null)
                 {
@@ -103,13 +103,10 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
                 // Use regular approach
                 using (FileStream fs = new FileStream(fileName, FileMode.Open))
                 {
-                    FileCreationInformation fileInfo = new FileCreationInformation()
-                    {
-                        ContentStream = fs,
-                        Url = uniqueFileName,
-                        Overwrite = true
-                    };
-
+                    FileCreationInformation fileInfo = new FileCreationInformation();
+                    fileInfo.ContentStream = fs;
+                    fileInfo.Url = uniqueFileName;
+                    fileInfo.Overwrite = true;
                     uploadFile = docs.RootFolder.Files.Add(fileInfo);
                     ctx.Load(uploadFile);
                     ctx.ExecuteQuery();
@@ -129,7 +126,7 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
                     using (BinaryReader br = new BinaryReader(fs))
                     {
                         byte[] buffer = new byte[blockSize];
-                        byte[] lastBuffer = null;
+                        Byte[] lastBuffer = null;
                         long fileoffset = 0;
                         long totalBytesRead = 0;
                         int bytesRead;
@@ -155,13 +152,10 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
                                 using (MemoryStream contentStream = new MemoryStream())
                                 {
                                     // Add an empty file.
-                                    FileCreationInformation fileInfo = new FileCreationInformation()
-                                    {
-                                        ContentStream = contentStream,
-                                        Url = uniqueFileName,
-                                        Overwrite = true
-                                    };
-
+                                    FileCreationInformation fileInfo = new FileCreationInformation();
+                                    fileInfo.ContentStream = contentStream;
+                                    fileInfo.Url = uniqueFileName;
+                                    fileInfo.Overwrite = true;
                                     uploadFile = docs.RootFolder.Files.Add(fileInfo);
 
                                     // Start upload by uploading the first slice.
@@ -226,9 +220,9 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
 
         public static Microsoft.SharePoint.Client.File UploadFileStream(HttpContextBase httpContext, string libraryName, string fileName, MemoryStream fileStream, int fileChunkSizeInMB = 3)
         {
-            SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
+            var spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
 
-            using (ClientContext ctx = spContext.CreateUserClientContextForSPHost())
+            using (var ctx = spContext.CreateUserClientContextForSPHost())
             {
                 // Each sliced upload requires a unique id
                 Guid uploadId = Guid.NewGuid();
@@ -297,7 +291,7 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
                         using (BinaryReader br = new BinaryReader(fileStream))
                         {
                             byte[] buffer = new byte[blockSize];
-                            byte[] lastBuffer = null;
+                            Byte[] lastBuffer = null;
                             long fileoffset = 0;
                             long totalBytesRead = 0;
                             int bytesRead;
@@ -323,13 +317,10 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
                                     using (MemoryStream contentStream = new MemoryStream())
                                     {
                                         // Add an empty file.
-                                        FileCreationInformation fileInfo = new FileCreationInformation()
-                                        {
-                                            ContentStream = contentStream,
-                                            Url = uniqueFileName,
-                                            Overwrite = true
-                                        };
-
+                                        FileCreationInformation fileInfo = new FileCreationInformation();
+                                        fileInfo.ContentStream = contentStream;
+                                        fileInfo.Url = uniqueFileName;
+                                        fileInfo.Overwrite = true;
                                         uploadFile = docs.RootFolder.Files.Add(fileInfo);
 
                                         // Start upload by uploading the first slice.
@@ -411,12 +402,9 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
         private static void CreateLibrary(ClientContext ctx, Web web, string libraryName)
         {
             // Create library to the web
-            ListCreationInformation creationInfo = new ListCreationInformation()
-            {
-                Title = libraryName,
-                TemplateType = (int)ListTemplateType.DocumentLibrary
-            };
-
+            ListCreationInformation creationInfo = new ListCreationInformation();
+            creationInfo.Title = libraryName;
+            creationInfo.TemplateType = (int)ListTemplateType.DocumentLibrary;
             List list = web.Lists.Add(creationInfo);
             ctx.ExecuteQuery();
         }

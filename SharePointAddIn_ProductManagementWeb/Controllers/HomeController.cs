@@ -1,10 +1,16 @@
-﻿using ProductManagement.Logic;
+﻿using Microsoft.SharePoint.Client;
+using ProductManagement.Logic;
 using ProductManagement.Models.View;
 using SharePointAddIn_ProductManagementWeb.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Diagnostics;
@@ -35,10 +41,9 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
         {
             ViewBag.SPHostUrl = SharePointContext.GetSPHostUrl(HttpContext.Request).AbsoluteUri;
 
-            ProductViewModel model = new ProductViewModel()
-            {
-                Countries = _countryFactory.GetCountries()
-            };
+            ProductViewModel model = new ProductViewModel();
+            model.Countries = _countryFactory.GetCountries();
+
             return View(model);
         }
 
@@ -124,7 +129,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
 
         [SharePointContextFilter]
         [HttpPost]
-        public ContentResult UploadFileContent()
+        public async Task<ContentResult> UploadFileContent()
         {
             // Callback name is passed if upload happens via iframe, not AJAX (FileAPI).
             string callback = Request.Form["fd-callback"];
@@ -171,7 +176,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
                 md5Hash = md5.ComputeHash(data);
             }
 
-            string output = string.Format("{0}; received {1} bytes, MD5 = {2}", name, data.Length, BytesArrayToHexString(md5Hash));
+            var output = string.Format("{0}; received {1} bytes, MD5 = {2}", name, data.Length, BytesArrayToHexString(md5Hash));
 
             // In FileDrop sample this demonstrates the passing of custom ?query variables along
             // with an AJAX/iframe upload.
@@ -209,8 +214,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
 
         private string BytesArrayToHexString(byte[] hash)
         {
-            StringBuilder sb = new StringBuilder();
-
+            var sb = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)
             {
                 sb.Append(hash[i].ToString("X2"));

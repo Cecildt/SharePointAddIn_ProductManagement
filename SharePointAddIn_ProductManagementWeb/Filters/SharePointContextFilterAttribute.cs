@@ -15,7 +15,8 @@ namespace SharePointAddIn_ProductManagementWeb
                 throw new ArgumentNullException("filterContext");
             }
 
-            switch (SharePointContextProvider.CheckRedirectionStatus(filterContext.HttpContext, out Uri redirectUrl))
+            Uri redirectUrl;
+            switch (SharePointContextProvider.CheckRedirectionStatus(filterContext.HttpContext, out redirectUrl))
             {
                 case RedirectionStatus.Ok:
                     return;

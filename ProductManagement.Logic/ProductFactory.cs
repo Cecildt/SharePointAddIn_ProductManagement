@@ -1,6 +1,9 @@
 ﻿using ProductManagement.Models.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using ProductManagement.DAL.Interfaces;
 using ProductManagement.DAL;
 using ProductManagement.Models.Data;

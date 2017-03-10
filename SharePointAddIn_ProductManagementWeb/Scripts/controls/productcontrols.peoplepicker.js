@@ -4,7 +4,7 @@ ProductControls.PeoplePicker = (function ($) {
     var appweburl = getQueryStringParameter('SPAppWebUrl');
     var hostweburl = getQueryStringParameter('SPHostUrl');
     var restSource = appweburl + "/_api/SP.UI.ApplicationPages.ClientPeoplePickerWebServiceInterface.clientPeoplePickerSearchUser";
-    var personaTmpl = "<div class='ms-PeoplePicker-result' tabindex='1'><div class='ms-Persona ms-Persona--sm'><div class='ms-Persona-imageArea'><div class='ms-Persona-initials ms-Persona-initials--green'>{init}</div></div></div><div class='ms-Persona-details'><div class='ms-Persona-primaryText'>{display_name}</div><div class='ms-Persona-secondaryText'>{email}</div></div></div><div><button class='ms-PeoplePicker-resultAction'><i class='ms-Icon ms-Icon--Clear'></i></button></div>";
+    var personaTmpl = "<div class='ms-PeoplePicker-result' tabindex='1'><div class='ms-Persona ms-Persona--sm'><div class='ms-Persona-imageArea'><div class='ms-Persona-initials ms-Persona-initials--green'>{init}</div></div></div><div class='ms-Persona-details'><div class='ms-Persona-primaryText'>{display_name}</div><div class='ms-Persona-secondaryText'>{email}</div></div></div><div><button class='ms-PeoplePicker-resultAction'><i class='ms-Icon ms-Icon--Clear'></i></button></div>"
 
     function searchUsers(searchTerm) {
 
@@ -34,7 +34,7 @@ ProductControls.PeoplePicker = (function ($) {
             }),
             'headers': {
                 'accept': 'application/json;odata=verbose',
-                'content-type': 'application/json;odata=verbose'
+                'content-type': 'application/json;odata=verbose',
                 //'X-RequestDigest': requestDigest
             },
             'success': function (data) {
@@ -45,7 +45,7 @@ ProductControls.PeoplePicker = (function ($) {
 
                 if (results.length > 0) {
                     response($.map(results, function (item) {
-                        return { label: item.DisplayText, value: item.DisplayText };
+                        return { label: item.DisplayText, value: item.DisplayText }
                     }));
                 }
             },

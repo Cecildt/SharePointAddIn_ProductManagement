@@ -1,6 +1,10 @@
 ﻿using ProductManagement.Models.Data;
 using ProductManagement.Models.View;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace ProductManagement.Logic.Helpers
@@ -11,7 +15,7 @@ namespace ProductManagement.Logic.Helpers
         {
             List<ProductViewModel> viewModels = new List<ProductViewModel>();
 
-            foreach (ProductDataModel item in dataModels)
+            foreach (var item in dataModels)
             {
                 viewModels.Add(new ProductViewModel()
                 {
@@ -33,7 +37,7 @@ namespace ProductManagement.Logic.Helpers
         {
             List<ProductDataModel> dataModels = new List<ProductDataModel>();
 
-            foreach (ProductViewModel item in viewModels)
+            foreach (var item in viewModels)
             {
                 dataModels.Add(new ProductDataModel()
                 {
