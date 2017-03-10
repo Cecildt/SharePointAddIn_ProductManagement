@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Diagnostics;
 
 namespace SharePointAddIn_ProductManagementWeb.Controllers
 {
@@ -129,6 +130,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             string callback = Request.Form["fd-callback"];
             string name;
             byte[] data;
+            string _libraryName = "Products Manuals";
 
             // Upload data can be POST'ed as raw form data or uploaded via <iframe> and <form>
             // using regular multipart/form-data enctype (which is handled by ASP.NET Request.Files).
@@ -158,7 +160,8 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             //    stream.CopyTo(fileStream);
             //}
 
-            Microsoft.SharePoint.Client.File uploadedFile = SharePointHelper.UploadFileStream(HttpContext, "Documents", name, stream);
+            // Upload to SharePoint
+            Microsoft.SharePoint.Client.File uploadedFile = SharePointHelper.UploadFileStream(HttpContext, _libraryName, name, stream);
 
             // Output message for this demo upload. In your real app this would be something
             // meaningful for the calling script (that uses FileDrop.js).
@@ -176,6 +179,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             if (!string.IsNullOrEmpty(opt))
             {
                 output += "\nReceived upload_option with value " + opt;
+                Trace.TraceInformation("File upload options: " + opt);
             }
 
             if (!string.IsNullOrEmpty(callback))

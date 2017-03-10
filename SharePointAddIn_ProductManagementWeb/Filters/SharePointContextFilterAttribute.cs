@@ -25,6 +25,9 @@ namespace SharePointAddIn_ProductManagementWeb
                 case RedirectionStatus.CanNotRedirect:
                     filterContext.Result = new ViewResult { ViewName = "Error" };
                     break;
+                default:
+                    filterContext.Result = new ViewResult { ViewName = "Error" };
+                    break;
             }
         }
     }
