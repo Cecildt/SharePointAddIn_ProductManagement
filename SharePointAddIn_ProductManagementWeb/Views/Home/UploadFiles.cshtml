@@ -77,11 +77,16 @@
         <fieldset id="zone">
             <legend>Drop a file inside&hellip;</legend>
             <p>Or click here to <em>Browse</em>..</p>
-
-            <p class="progress">
-                <span id="bar_zone"></span>
-            </p>
         </fieldset>
+
+        <div class="ms-ProgressIndicator" id="fileProgress">
+            <div class="ms-ProgressIndicator-itemName"></div>
+            <div class="ms-ProgressIndicator-itemProgress">
+                <div class="ms-ProgressIndicator-progressTrack"></div>
+                <div class="ms-ProgressIndicator-progressBar"></div>
+            </div>
+            <div class="ms-ProgressIndicator-itemDescription">Uploading file...</div>
+        </div>
 
     </div>
 </div>
@@ -89,6 +94,10 @@
 @section scripts {
     <script src='~/Scripts/controls/filedrop-min.js'></script>
     <script type="text/javascript">
+        var $fileProgress = $("#fileProgress");
+        var progressIndicator = new fabric['ProgressIndicator']($fileProgress[0]);
+        $fileProgress.hide();
+
         // Tell FileDrop we can deal with iframe uploads using this URL:
         var options = { iframe: { url: '/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl' } };
         // Attach FileDrop to an area ('zone' is an ID but you can also give a DOM node):
@@ -112,24 +121,42 @@
                 file.event('done', function (xhr) {
                     // 'this' here points to fd.File instance that has triggered the event.
                     console.log('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
+                    progressIndicator.setProgressPercent(1);
+                    progressIndicator.setDescription("Done uploading file: " + this.name);
+                    setTimeout(function () {
+                        $fileProgress.hide();
+                    }, 4000);
                 });
 
                 file.event('error', function (e, xhr) {
                     console.log("Failed upload: " + xhr.status + ', ' + xhr.statusText)
+
+                    progressIndicator.setDescription("Failed to upload file: " + this.name);
+                    setTimeout(function () {
+                        $fileProgress.hide();
+                    }, 4000);
                 })
 
                 // Reset the progress when a new upload starts:
                 file.event('sendXHR', function () {
-                    fd.byID('bar_zone').style.width = 0
+                    progressIndicator.setName(this.name);
+                    progressIndicator.setProgressPercent(0.1);
+                    progressIndicator.setDescription("Uploading file...");
+                    $fileProgress.show();
                 })
 
                 file.event('progress', function (current, total) {
-                    var width = current / total * 100 + '%'
-                    fd.byID('bar_zone').style.width = width
+                    if (current === total) {
+                        progressIndicator.setProgressPercent(0.5);
+
+                        setTimeout(function () {
+                            progressIndicator.setProgressPercent(0.7);
+                        }, 5000);
+                    }
                 })
 
                 // Send the file:
-                file.sendTo('/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl');
+                file.sendTo('/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl&code=PC123');
             });
         });
 
@@ -137,6 +164,10 @@
         // from proper AJAX upload hence another handler):
         zone.event('iframeDone', function (xhr) {
             console.log('Done uploading via <iframe>, response:\n\n' + xhr.responseText);
+
+            setTimeout(function () {
+                $fileProgress.hide();
+            }, 4000);
         });
 
     </script>

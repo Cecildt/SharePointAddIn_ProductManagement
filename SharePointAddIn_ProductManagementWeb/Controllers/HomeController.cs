@@ -129,8 +129,13 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
 
         [SharePointContextFilter]
         [HttpPost]
-        public async Task<ContentResult> UploadFileContent()
+        public async Task<ContentResult> UploadFileContent(string code)
         {
+            if (!string.IsNullOrEmpty(code))
+            {
+                Trace.TraceInformation("Product Code: " + code);
+            }
+
             // Callback name is passed if upload happens via iframe, not AJAX (FileAPI).
             string callback = Request.Form["fd-callback"];
             string name;
