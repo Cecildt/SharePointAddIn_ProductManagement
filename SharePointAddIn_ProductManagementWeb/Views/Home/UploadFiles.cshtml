@@ -72,6 +72,9 @@
 </div>
 <div class="ms-Grid-row">
     <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+        <div>
+            <input id="productCode" type="text" name="productCode" value="0" />
+        </div>
         <h2>Upload Files</h2>
 
         <fieldset id="zone">
@@ -155,8 +158,10 @@
                     }
                 })
 
+                var productCode = $("#productCode").val();
+
                 // Send the file:
-                file.sendTo('/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl&code=PC123');
+                file.sendTo('/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl&code=' + productCode);
             });
         });
 

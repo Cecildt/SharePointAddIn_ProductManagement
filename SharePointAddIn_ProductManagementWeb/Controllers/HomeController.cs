@@ -173,6 +173,8 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             // Upload to SharePoint
             Microsoft.SharePoint.Client.File uploadedFile = SharePointHelper.UploadFileStream(HttpContext, _libraryName, name, stream);
 
+            SharePointHelper.UpdateFileInformation(HttpContext, uploadedFile, code);
+
             // Output message for this demo upload. In your real app this would be something
             // meaningful for the calling script (that uses FileDrop.js).
             byte[] md5Hash;

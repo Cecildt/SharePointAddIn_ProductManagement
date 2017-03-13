@@ -37,9 +37,9 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
         {
             User spUser = null;
 
-            var spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
+            SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
 
-            using (var clientContext = spContext.CreateUserClientContextForSPHost())
+            using (ClientContext clientContext = spContext.CreateUserClientContextForSPHost())
             {
                 if (clientContext != null)
                 {
@@ -220,9 +220,9 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
 
         public static Microsoft.SharePoint.Client.File UploadFileStream(HttpContextBase httpContext, string libraryName, string fileName, MemoryStream fileStream, int fileChunkSizeInMB = 3)
         {
-            var spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
+            SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
 
-            using (var ctx = spContext.CreateUserClientContextForSPHost())
+            using (ClientContext ctx = spContext.CreateUserClientContextForSPHost())
             {
                 // Each sliced upload requires a unique id
                 Guid uploadId = Guid.NewGuid();
@@ -382,6 +382,26 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
             }
 
             return null;
+        }
+
+        public static void UpdateFileInformation(HttpContextBase httpContext, Microsoft.SharePoint.Client.File file, string productCode)
+        {
+            SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
+
+            using (ClientContext ctx = spContext.CreateUserClientContextForSPHost())
+            {
+                Web web = ctx.Web;
+
+                Microsoft.SharePoint.Client.File newFile = web.GetFileByServerRelativeUrl(file.ServerRelativeUrl);
+                ctx.Load(newFile);
+                ctx.ExecuteQuery();
+
+                newFile.ListItemAllFields["Product_x0020_Code"] = productCode;
+
+                newFile.ListItemAllFields.Update();
+                ctx.Load(newFile);
+                ctx.ExecuteQuery();
+            }
         }
 
         private static bool LibraryExists(ClientContext ctx, Web web, string libraryName)
