@@ -73,7 +73,10 @@
 <div class="ms-Grid-row">
     <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         <div>
+            <label>Product Code</label>
             <input id="productCode" type="text" name="productCode" value="0" />
+            <label>Save in Document Set</label>
+            <input id="useDocumentSet" type="checkbox" name="documentSet" value="" />
         </div>
         <h2>Upload Files</h2>
 
@@ -159,9 +162,10 @@
                 })
 
                 var productCode = $("#productCode").val();
+                var useDocumentSet = document.getElementById('useDocumentSet').checked;
 
                 // Send the file:
-                file.sendTo('/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl&code=' + productCode);
+                file.sendTo('/Home/UploadFileContent?SPHostUrl=@ViewBag.SPHostUrl&code=' + productCode + "&useSet=" + useDocumentSet);
             });
         });
 

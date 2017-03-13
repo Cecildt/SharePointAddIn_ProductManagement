@@ -129,7 +129,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
 
         [SharePointContextFilter]
         [HttpPost]
-        public async Task<ContentResult> UploadFileContent(string code)
+        public async Task<ContentResult> UploadFileContent(string code, bool useSet)
         {
             if (!string.IsNullOrEmpty(code))
             {
@@ -141,6 +141,12 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             string name;
             byte[] data;
             string _libraryName = "Products Manuals";
+            string setURL = "";
+
+            if (useSet)
+            {
+                setURL = SharePointHelper.CreateDocumentSet(HttpContext, _libraryName, code);
+            }
 
             // Upload data can be POST'ed as raw form data or uploaded via <iframe> and <form>
             // using regular multipart/form-data enctype (which is handled by ASP.NET Request.Files).
@@ -171,7 +177,7 @@ namespace SharePointAddIn_ProductManagementWeb.Controllers
             //}
 
             // Upload to SharePoint
-            Microsoft.SharePoint.Client.File uploadedFile = SharePointHelper.UploadFileStream(HttpContext, _libraryName, name, stream);
+            Microsoft.SharePoint.Client.File uploadedFile = SharePointHelper.UploadFileStream(HttpContext, _libraryName, setURL + name, stream);
 
             SharePointHelper.UpdateFileInformation(HttpContext, uploadedFile, code);
 

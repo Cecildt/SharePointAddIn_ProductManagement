@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
+using Microsoft.SharePoint.Client.DocumentSet;
 
 namespace SharePointAddIn_ProductManagementWeb.Helpers
 {
@@ -218,6 +219,42 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
             return null;
         }
 
+        internal static string CreateDocumentSet(HttpContextBase httpContext, string libraryName, string code)
+        {
+            SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
+
+            using (ClientContext ctx = spContext.CreateUserClientContextForSPHost())
+            {
+                List list = ctx.Web.Lists.GetByTitle(libraryName);
+
+                Folder parentFolder = list.RootFolder;
+
+                ContentType ct = ctx.Web.ContentTypes.GetById("0x0120D52000ADC844085652724C97963DE3066FCD53");
+                ctx.Load(ct);
+                ctx.ExecuteQuery();
+
+                string name = code + " Records";
+
+                ClientResult<string> results = DocumentSet.Create(ctx, parentFolder, name, ct.Id);
+                ctx.ExecuteQuery();
+
+                // Update meta-data
+                Web web = ctx.Web;
+
+                ListItem item = web.GetListItem(results.Value);
+                ctx.Load(item);
+                ctx.ExecuteQuery();
+
+                item["Product_x0020_Tag"] = code;
+                item.Update();
+
+                ctx.Load(item);
+                ctx.ExecuteQuery();
+
+                return results.Value + "/";
+            }
+        }
+
         public static Microsoft.SharePoint.Client.File UploadFileStream(HttpContextBase httpContext, string libraryName, string fileName, MemoryStream fileStream, int fileChunkSizeInMB = 3)
         {
             SharePointContext spContext = SharePointContextProvider.Current.GetSharePointContext(httpContext);
@@ -228,7 +265,7 @@ namespace SharePointAddIn_ProductManagementWeb.Helpers
                 Guid uploadId = Guid.NewGuid();
 
                 // Get the name of the file
-                string uniqueFileName = Path.GetFileName(fileName);
+                string uniqueFileName = fileName;
 
                 // Ensure that target library exists, create if is missing
                 if (!LibraryExists(ctx, ctx.Web, libraryName))
